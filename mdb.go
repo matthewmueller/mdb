@@ -80,10 +80,16 @@ func (txn *Txn) Delete(k string) error {
 }
 
 // All fn
-func (txn *Txn) All(prefix string) *iradix.Iterator {
+func (txn *Txn) All(prefix string) (matches []interface{}) {
 	it := txn.rootTxn.Root().Iterator()
 	it.SeekPrefix([]byte(prefix))
-	return it
+	for {
+		_, val, more := it.Next()
+		if !more {
+			return matches
+		}
+		matches = append(matches, val)
+	}
 }
 
 // Commit a transaction

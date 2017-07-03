@@ -148,15 +148,11 @@ func TestIterator(t *testing.T) {
 	txn.Commit()
 
 	txn = db.Txn(false)
-	it := txn.All("")
+	matches := txn.All("")
 	vals := []string{}
 
-	for {
-		_, v, more := it.Next()
-		if !more {
-			break
-		}
-		vals = append(vals, v.(string))
+	for _, match := range matches {
+		vals = append(vals, match.(string))
 	}
 
 	assert.Equal(t, "a.1,a.2,c.1", strings.Join(vals, ","))
@@ -171,15 +167,11 @@ func TestIteratorWithPrefix(t *testing.T) {
 	txn.Commit()
 
 	txn = db.Txn(false)
-	it := txn.All("a")
+	matches := txn.All("a")
 	vals := []string{}
 
-	for {
-		_, v, more := it.Next()
-		if !more {
-			break
-		}
-		vals = append(vals, v.(string))
+	for _, match := range matches {
+		vals = append(vals, match.(string))
 	}
 
 	assert.Equal(t, "a.1,a.2", strings.Join(vals, ","))

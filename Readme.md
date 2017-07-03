@@ -29,15 +29,11 @@ txn.Put("c.1", "c.1")
 txn.Commit()
 
 txn = db.Txn(false)
-it := txn.All("a")
+matches := txn.All("a")
 vals := []string{}
 
-for {
-  _, v, more := it.Next()
-  if !more {
-    break
-  }
-  vals = append(vals, v.(string))
+for _, match := range matches {
+  vals = append(vals, match.(string))
 }
 
 assert.Equal(t, "a.1,a.2", strings.Join(vals, ","))
