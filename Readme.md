@@ -14,11 +14,11 @@ In-memory key/value store designed for concurrent use. A simpler, but less featu
 
 ## For the curious: How the MVCC part works
 
-The benefit of an MVCC system is that reads don't block writes and writes don't block reads. This is unlike [mutex.RWLock](), where read block write and writes block reads.
+The benefit of an MVCC system is that reads don't block writes and writes don't block reads. This is unlike [sync.RWMutex](https://golang.org/pkg/sync/#RWMutex.RLock), where reads block writes and writes block reads.
 
-The way this works is by using an immutable data structure underneath. In the case of the library and go-memdb, it's using an [immutable radix tree](https://github.com/hashicorp/go-immutable-radix). This allows readers to use a snapshot, while a writer's transaction is taking place. The compromise here is that a reader may not have the most up-to-date data.
+The way this works is by using an immutable data structure underneath. In the case of mdb and go-memdb, it's using an [immutable radix tree](https://github.com/hashicorp/go-immutable-radix). This allows readers to use a snapshot, while a writer's transaction is taking place. The compromise here is that a reader may not have the most up-to-date data.
 
-It's important to note that while the underlying structure is immutable, any pointers will not be, so you'll likely want to wrap this library in a way that also does the copying. You can find a good example of this in this [state store](https://github.com/hashicorp/nomad/blob/460296eedb7f659f5651e3793903ccc9d60c754b/nomad/state/state_store.go).
+It's important to note that while the underlying structure is immutable, any pointers will not be, so you'll likely want to wrap this library in a way that also handles copying pointers. You can find a good example of this in this [state store](https://github.com/hashicorp/nomad/blob/460296eedb7f659f5651e3793903ccc9d60c754b/nomad/state/state_store.go).
 
 ## Example
 
